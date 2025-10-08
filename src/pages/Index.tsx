@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ShoppingCart, Search, Menu, X, Heart, Star, Bot, Facebook, Instagram, Twitter, Phone, Mail, ChevronRight, Filter, Package, Truck, Shield, ArrowUp } from 'lucide-react';
+import { ShoppingCart, Search, Menu, X, Heart, Star, Bot, Facebook, Instagram, Twitter, Phone, Mail, ChevronRight, Filter, Package, Truck, Shield, ArrowUp, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 
 interface Product {
   id: number;
@@ -107,6 +109,8 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showChat, setShowChat] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [showWishlist, setShowWishlist] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -138,9 +142,21 @@ const Index = () => {
     }
   };
 
+  const removeFromCart = (productId: number) => {
+    setCart(cart.filter(item => item.id !== productId));
+    toast.info('Item removed from cart');
+  };
+
+  const removeFromWishlist = (productId: number) => {
+    setWishlist(wishlist.filter(item => item.id !== productId));
+    toast.info('Item removed from wishlist');
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <div className="min-h-screen">
@@ -206,26 +222,101 @@ const Index = () => {
 
             {/* Cart & Menu */}
             <div className="flex items-center gap-3">
-              <button 
-                className="relative p-2 hover:bg-accent/10 rounded-lg transition group"
-              >
-                <Heart className="w-6 h-6 text-foreground group-hover:text-accent transition" />
-                {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
-                    {wishlist.length}
-                  </span>
-                )}
-              </button>
-              <button 
-                className="relative p-2 hover:bg-accent/10 rounded-lg transition group"
-              >
-                <ShoppingCart className="w-6 h-6 text-foreground group-hover:text-accent transition" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
-                    {cart.length}
-                  </span>
-                )}
-              </button>
+              <Sheet open={showWishlist} onOpenChange={setShowWishlist}>
+                <SheetTrigger asChild>
+                  <button 
+                    className="relative p-2 hover:bg-accent/10 rounded-lg transition group"
+                  >
+                    <Heart className="w-6 h-6 text-foreground group-hover:text-accent transition" />
+                    {wishlist.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-gradient-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
+                        {wishlist.length}
+                      </span>
+                    )}
+                  </button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Wishlist ({wishlist.length})</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-4">
+                    {wishlist.length === 0 ? (
+                      <p className="text-muted-foreground text-center py-8">Your wishlist is empty</p>
+                    ) : (
+                      wishlist.map(item => (
+                        <div key={item.id} className="flex gap-4 bg-card p-3 rounded-lg border">
+                          <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm">{item.name}</h4>
+                            <p className="text-accent font-bold">GH¢{item.price}</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeFromWishlist(item.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+
+              <Sheet open={showCart} onOpenChange={setShowCart}>
+                <SheetTrigger asChild>
+                  <button 
+                    className="relative p-2 hover:bg-accent/10 rounded-lg transition group"
+                  >
+                    <ShoppingCart className="w-6 h-6 text-foreground group-hover:text-accent transition" />
+                    {cart.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-gradient-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
+                        {cart.length}
+                      </span>
+                    )}
+                  </button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Shopping Cart ({cart.length})</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-4 flex-1 overflow-auto">
+                    {cart.length === 0 ? (
+                      <p className="text-muted-foreground text-center py-8">Your cart is empty</p>
+                    ) : (
+                      <>
+                        {cart.map((item, index) => (
+                          <div key={`${item.id}-${index}`} className="flex gap-4 bg-card p-3 rounded-lg border">
+                            <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-sm">{item.name}</h4>
+                              <p className="text-accent font-bold">GH¢{item.price}</p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => removeFromCart(item.id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <div className="border-t pt-4 mt-4">
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="font-semibold">Total:</span>
+                            <span className="text-2xl font-bold text-accent">GH¢{cartTotal}</span>
+                          </div>
+                          <Button className="w-full" size="lg">
+                            Proceed to Checkout
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden p-2 hover:bg-muted rounded-lg"
