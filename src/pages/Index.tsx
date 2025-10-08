@@ -289,8 +289,8 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center group hover:transform hover:scale-105 transition p-6 rounded-xl hover:shadow-elevated bg-card">
-              <div className="bg-gradient-primary w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-bounce shadow-card">
-                <Bot className="w-8 h-8 text-primary-foreground" />
+              <div className="bg-accent w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-bounce shadow-card">
+                <Bot className="w-8 h-8 text-accent-foreground" />
               </div>
               <h3 className="font-bold text-lg mb-2 text-primary">AI-Powered Search</h3>
               <p className="text-muted-foreground">Find exactly what you need with intelligent recommendations</p>
@@ -303,8 +303,8 @@ const Index = () => {
               <p className="text-muted-foreground">Quick and reliable shipping across Ghana</p>
             </div>
             <div className="text-center group hover:transform hover:scale-105 transition p-6 rounded-xl hover:shadow-elevated bg-card">
-              <div className="bg-gradient-primary w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-bounce shadow-card">
-                <Shield className="w-8 h-8 text-primary-foreground" />
+              <div className="bg-accent w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-bounce shadow-card">
+                <Shield className="w-8 h-8 text-accent-foreground" />
               </div>
               <h3 className="font-bold text-lg mb-2 text-primary">Secure Payment</h3>
               <p className="text-muted-foreground">Safe and trusted payment methods</p>
