@@ -183,7 +183,7 @@ const Index = () => {
               <img 
                 src="/logo.png" 
                 alt="Brivon Logo"
-                className="h-12 w-auto"
+                className="h-24 w-auto"
               />
               <span className="hidden md:inline text-xs bg-gradient-primary text-primary-foreground px-3 py-1 rounded-full font-semibold animate-pulse">
                 AI-Powered
